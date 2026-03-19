@@ -1,0 +1,21 @@
+{
+  "name": "feishu-wiki-site-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Feishu Wiki/Docx to website content toolkit",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "feishu",
+    "wiki",
+    "docx",
+    "cms",
+    "nextjs"
+  ],
+  "license": "MIT"
+}
