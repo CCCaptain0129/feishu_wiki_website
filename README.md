@@ -13,6 +13,10 @@
 - 文章摘要和标签解析
   - `摘要: ...` / `摘要：...`
   - `标签: #tagA #tagB` / `tag: #tagA #tagB`
+- React 渲染组件
+  - `FeishuBlockRenderer`（Block API 渲染）
+  - `FeishuDocContent`（raw_content 兜底渲染）
+  - `CodeBlock`（复制按钮）
 - 输出可用于前端渲染和索引的统一数据结构
 
 ## 安装与使用
@@ -80,6 +84,27 @@ if (!result.valid) {
 console.log(result.home, result.navigation.length, result.articles.length);
 ```
 
+```ts
+import { FeishuWikiClient, buildAndWriteSiteData } from 'feishu-wiki-site-kit';
+
+const client = new FeishuWikiClient({
+  appId: process.env.FEISHU_APP_ID!,
+  appSecret: process.env.FEISHU_APP_SECRET!,
+  wikiBaseUrl: process.env.FEISHU_WIKI_BASE_URL!,
+});
+
+const { build, files } = await buildAndWriteSiteData(
+  client,
+  {
+    spaceId: process.env.FEISHU_WIKI_SPACE_ID!,
+    siteConfigNodeToken: process.env.FEISHU_SITE_CONFIG_TOKEN!,
+  },
+  './dist/content',
+);
+
+console.log(build.valid, files.siteFile, files.routesFile, files.articleDir);
+```
+
 ## 环境变量建议
 
 ```bash
@@ -135,6 +160,41 @@ FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
 - `getContentArticlesByParent(client, spaceId, parentNodeToken)`
   - 一次性拉取指定父节点下内容并输出 `ContentArticle[]`
 
+### Renderer 组件
+
+- `FeishuBlockRenderer`
+  - 输入 `blocks + nodeToken + externalUrl`
+  - 可选注入：
+    - `rewriteMentionDocHref(token, title)`：重写 mention_doc 链接
+    - `resolveImageSrc(imageToken)`：重写图片 URL（如接入图片代理）
+    - `getLinkCardFallback(nodeToken, blockId)`：自定义链接卡片兜底
+- `FeishuDocContent`
+  - 输入 `raw_content` 文本并渲染段落/列表/代码块/URL 卡片
+- `CodeBlock`
+  - 带复制按钮的代码块组件
+
+示例：
+
+```tsx
+import { FeishuBlockRenderer, FeishuDocContent } from 'feishu-wiki-site-kit';
+
+function ArticleView({ page }: { page: { contentType: string; blocks: any[]; content: string | null; externalUrl: string } }) {
+  if (page.contentType === 'blocks') {
+    return (
+      <FeishuBlockRenderer
+        blocks={page.blocks}
+        nodeToken="your-node-token"
+        externalUrl={page.externalUrl}
+        rewriteMentionDocHref={(token) => `/tutorials/${token}`}
+        resolveImageSrc={(imageToken) => `/api/feishu/image/${imageToken}`}
+      />
+    );
+  }
+
+  return <FeishuDocContent content={page.content || ''} />;
+}
+```
+
 ### Site Builder
 
 - `buildSiteData(client, { spaceId, siteConfigNodeToken })`
@@ -144,6 +204,43 @@ FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
     - `navigation`
     - `articles`
     - `articleIssues`
+  - 自动补全文章字段（无需手写全部 frontmatter）：
+    - `title` 默认取飞书文档标题
+    - `slug` 默认按标题生成（支持中文 slug）
+    - `date` 优先文档内容中的 `date/日期`，否则回退到飞书编辑/创建时间
+    - `summary/tags` 自动从正文解析
+    - `draft` 默认 `false`，`toc` 默认 `true`
+- `writeSiteArtifacts(result, outputDir)`
+  - 将构建结果写入静态文件：
+    - `${outputDir}/site.json`
+    - `${outputDir}/routes.json`
+    - `${outputDir}/articles/*.json`
+- `buildAndWriteSiteData(client, options, outputDir)`
+  - 一步完成“构建 + 落盘”
+
+## 本地预览网站（Next.js）
+
+新增了一个最小可发布站点骨架：`apps/site`。
+
+### 1) 先生成内容产物
+
+确保已经运行过 `buildAndWriteSiteData(...)`，并生成如下目录（示例）：
+
+- `tmp/local-run-latest/site.json`
+- `tmp/local-run-latest/routes.json`
+- `tmp/local-run-latest/articles/*.json`
+
+### 2) 启动站点
+
+```bash
+cd apps/site
+npm install
+CONTENT_DIR=../../tmp/local-run-latest npm run dev
+```
+
+默认访问 `http://localhost:3000`。
+
+可通过环境变量 `CONTENT_DIR` 指向任意构建输出目录（相对 `apps/site` 或绝对路径均可）。
 
 ## 输出数据结构（核心）
 
@@ -169,6 +266,7 @@ FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
 - `src/parser.ts`：内容解析（摘要、标签、文本抽取）
 - `src/types.ts`：类型定义（节点、blocks、文章结构）
 - `src/index.ts`：统一导出
+- `src/renderer/*`：React 渲染组件（block/raw/code）
 
 ## 优化方向
 

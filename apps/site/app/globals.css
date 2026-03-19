@@ -1,0 +1,260 @@
+:root {
+  --bg: #f3f6f8;
+  --text: #1b2430;
+  --muted: #5f6b7a;
+  --card: #ffffff;
+  --line: #dbe4ea;
+  --brand: #0f766e;
+  --brand-dark: #0b5b55;
+  --brand-soft: #e6f4f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(1200px 600px at 100% -50%, #e8f3ff 0%, transparent 70%),
+    radial-gradient(900px 520px at -10% -30%, #eaf9f2 0%, transparent 68%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+.hero {
+  margin-bottom: 20px;
+  border: 1px solid #d4e2ea;
+  border-radius: 18px;
+  padding: 24px;
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(248, 252, 255, 0.96)),
+    linear-gradient(120deg, #eef8ff 0%, #effaf6 100%);
+  box-shadow: 0 8px 24px rgba(20, 40, 80, 0.06);
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: 34px;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.heroBadge {
+  display: inline-block;
+  margin-bottom: 12px;
+  border: 1px solid #cde0dd;
+  color: var(--brand-dark);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--brand-soft);
+}
+
+.heroMeta {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.heroMeta span {
+  border: 1px solid #d7e1e8;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #425265;
+  background: #f7fbff;
+}
+
+.heroActions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.heroPrimaryBtn,
+.heroGhostBtn {
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.heroPrimaryBtn {
+  background: var(--brand);
+  color: white;
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.24);
+}
+
+.heroPrimaryBtn:hover {
+  background: var(--brand-dark);
+  text-decoration: none;
+}
+
+.heroGhostBtn {
+  background: #f8fbff;
+  color: #1f2d3a;
+  border-color: #d3dee7;
+}
+
+.heroGhostBtn:hover {
+  background: white;
+  text-decoration: none;
+}
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 12px rgba(31, 45, 74, 0.04);
+}
+
+.articleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.card h3 {
+  margin: 0 0 8px;
+}
+
+.meta {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.body {
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.feishu-doc {
+  display: grid;
+  gap: 16px;
+}
+
+.doc-empty {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px;
+  color: var(--muted);
+}
+
+.doc-gap {
+  height: 12px;
+}
+
+.doc-h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.35;
+}
+
+.doc-p {
+  margin: 0;
+  line-height: 1.9;
+}
+
+.doc-list {
+  margin: 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 6px;
+  line-height: 1.8;
+}
+
+.doc-link-card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 14px;
+}
+
+.doc-link-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.doc-link-url {
+  margin-top: 4px;
+  word-break: break-all;
+  font-weight: 600;
+}
+
+.doc-code {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.doc-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 12px;
+}
+
+.doc-code-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.doc-code-copy {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.doc-code-body {
+  margin: 0;
+  overflow-x: auto;
+  padding: 12px;
+  line-height: 1.65;
+}

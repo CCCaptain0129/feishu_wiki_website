@@ -1,0 +1,6 @@
+.DS_Store
+.env.rtf
+node_modules/
+tmp/
+apps/site/node_modules/
+apps/site/.next/

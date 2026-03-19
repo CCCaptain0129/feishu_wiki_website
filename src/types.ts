@@ -112,6 +112,7 @@ export interface SiteConfig {
   theme: string;
   homeToken: string;
   navRootToken: string;
+  slugMode?: SlugMode;
 }
 
 export interface SiteConfigParseResult {
@@ -126,6 +127,7 @@ export interface ArticleFrontmatter {
   date: string;
   summary: string;
   tags: string[];
+  author?: string;
   cover?: string;
   draft?: boolean;
   toc?: boolean;
@@ -174,12 +176,14 @@ export interface GeneratedArticle {
   page: WikiPageContent;
   frontmatter: Partial<ArticleFrontmatter> & { tags: string[] };
   contentMeta: ParsedArticleContent;
+  body: string;
   validation: ValidationResult;
 }
 
 export interface SiteBuildOptions {
   spaceId: string;
   siteConfigNodeToken: string;
+  slugMode?: SlugMode;
 }
 
 export interface SiteBuildResult {
@@ -190,6 +194,24 @@ export interface SiteBuildResult {
   navigation: SiteNavItem[];
   articles: GeneratedArticle[];
   articleIssues: ValidationIssue[];
+}
+
+export interface SiteRouteItem {
+  slug: string;
+  nodeToken: string;
+  title: string;
+  externalUrl: string;
+  draft: boolean;
+}
+
+export type SlugMode = 'title-cn' | 'ascii';
+
+export interface SiteArtifactWriteResult {
+  outputDir: string;
+  siteFile: string;
+  routesFile: string;
+  articleDir: string;
+  articleFiles: string[];
 }
 
 export interface ContentArticle {

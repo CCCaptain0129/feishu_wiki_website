@@ -177,7 +177,7 @@ function splitFrontmatterAndBody(content: string) {
   };
 }
 
-function extractLinesFromInput(input: { contentType: 'blocks' | 'raw_content' | 'unsupported'; blocks: FeishuBlockNode[]; content: string | null }) {
+export function extractContentLines(input: { contentType: 'blocks' | 'raw_content' | 'unsupported'; blocks: FeishuBlockNode[]; content: string | null }) {
   return input.contentType === 'blocks'
     ? collectBlockTextLines(input.blocks)
     : (input.content || '')
@@ -211,7 +211,7 @@ export function extractTagsFromLines(lines: string[]) {
 }
 
 export function parseArticleContent(input: { contentType: 'blocks' | 'raw_content' | 'unsupported'; blocks: FeishuBlockNode[]; content: string | null }): ParsedArticleContent {
-  const lines = extractLinesFromInput(input);
+  const lines = extractContentLines(input);
 
   return {
     summary: extractSummaryFromLines(lines),
@@ -220,7 +220,7 @@ export function parseArticleContent(input: { contentType: 'blocks' | 'raw_conten
 }
 
 export function parseSiteConfig(input: { contentType: 'blocks' | 'raw_content' | 'unsupported'; blocks: FeishuBlockNode[]; content: string | null }): SiteConfigParseResult {
-  const lines = extractLinesFromInput(input);
+  const lines = extractContentLines(input);
   return parseSiteConfigFromLines(lines);
 }
 
@@ -234,6 +234,7 @@ export function parseSiteConfigFromLines(lines: string[]): SiteConfigParseResult
     theme: raw.theme || '',
     homeToken: raw.home_token || '',
     navRootToken: raw.nav_root_token || '',
+    slugMode: raw.slug_mode === 'ascii' ? 'ascii' : raw.slug_mode === 'title-cn' ? 'title-cn' : undefined,
   };
 
   const missingKeys = (['siteTitle', 'siteDescription', 'baseUrl', 'theme', 'homeToken', 'navRootToken'] as const).filter(
@@ -266,9 +267,10 @@ export function parseArticleFrontmatter(content: string): ArticleFrontmatterPars
   const frontmatter: Partial<ArticleFrontmatter> & { tags: string[] } = {
     slug: raw.slug || '',
     title: raw.title || '',
-    date: raw.date || '',
-    summary: raw.summary || '',
+    date: raw.date || raw['日期'] || raw.publish_date || raw.published_at || '',
+    summary: raw.summary || raw['摘要'] || '',
     tags: Array.from(new Set(rawTags.length ? rawTags : fallbackTags)),
+    author: raw.author || raw['作者'] || '',
     cover: raw.cover || undefined,
     draft: parseBoolean(raw.draft),
     toc: parseBoolean(raw.toc),
@@ -340,12 +342,12 @@ export function validateArticleFrontmatter(result: ArticleFrontmatterParseResult
     });
   }
 
-  if (frontmatter.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(frontmatter.slug)) {
+  if (frontmatter.slug && !/^[\p{L}\p{N}_-]+$/u.test(frontmatter.slug)) {
     issues.push({
       severity: 'error',
       field: 'slug',
       code: 'invalid_slug',
-      message: 'slug 仅支持小写字母、数字和中划线，且不能以中划线开头或结尾',
+      message: 'slug 仅支持中英文字符、数字、下划线和中划线（不能含空格或特殊符号）',
     });
   }
 
