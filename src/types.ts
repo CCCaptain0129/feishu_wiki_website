@@ -105,6 +105,93 @@ export interface ParsedArticleContent {
   tags: string[];
 }
 
+export interface SiteConfig {
+  siteTitle: string;
+  siteDescription: string;
+  baseUrl: string;
+  theme: string;
+  homeToken: string;
+  navRootToken: string;
+}
+
+export interface SiteConfigParseResult {
+  config: Partial<SiteConfig>;
+  missingKeys: (keyof SiteConfig)[];
+  raw: Record<string, string>;
+}
+
+export interface ArticleFrontmatter {
+  slug: string;
+  title: string;
+  date: string;
+  summary: string;
+  tags: string[];
+  cover?: string;
+  draft?: boolean;
+  toc?: boolean;
+}
+
+export interface ArticleFrontmatterParseResult {
+  frontmatter: Partial<ArticleFrontmatter> & { tags: string[] };
+  missingKeys: ('slug' | 'title' | 'date' | 'summary')[];
+  body: string;
+  raw: Record<string, string>;
+}
+
+export type ValidationSeverity = 'error' | 'warning';
+
+export interface ValidationIssue {
+  severity: ValidationSeverity;
+  field: string;
+  code: string;
+  message: string;
+}
+
+export interface ValidationResult {
+  valid: boolean;
+  issues: ValidationIssue[];
+  errors: ValidationIssue[];
+  warnings: ValidationIssue[];
+}
+
+export interface SiteNavItem {
+  nodeToken: string;
+  title: string;
+  url: string;
+  children: SiteNavItem[];
+}
+
+export interface HomePageData {
+  nodeToken: string;
+  title: string;
+  summary: string;
+  tags: string[];
+  externalUrl: string;
+}
+
+export interface GeneratedArticle {
+  node: WikiNode;
+  page: WikiPageContent;
+  frontmatter: Partial<ArticleFrontmatter> & { tags: string[] };
+  contentMeta: ParsedArticleContent;
+  validation: ValidationResult;
+}
+
+export interface SiteBuildOptions {
+  spaceId: string;
+  siteConfigNodeToken: string;
+}
+
+export interface SiteBuildResult {
+  valid: boolean;
+  config: SiteConfigParseResult;
+  configValidation: ValidationResult;
+  home: HomePageData | null;
+  navigation: SiteNavItem[];
+  articles: GeneratedArticle[];
+  articleIssues: ValidationIssue[];
+}
+
 export interface ContentArticle {
   node: WikiNode;
   page: WikiPageContent;

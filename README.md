@@ -57,6 +57,29 @@ for (const article of articles) {
 }
 ```
 
+### 4) 一次性生成站点数据（配置 + 首页 + 导航 + 文章 + 校验结果）
+
+```ts
+import { FeishuWikiClient, buildSiteData } from 'feishu-wiki-site-kit';
+
+const client = new FeishuWikiClient({
+  appId: process.env.FEISHU_APP_ID!,
+  appSecret: process.env.FEISHU_APP_SECRET!,
+  wikiBaseUrl: process.env.FEISHU_WIKI_BASE_URL!,
+});
+
+const result = await buildSiteData(client, {
+  spaceId: process.env.FEISHU_WIKI_SPACE_ID!,
+  siteConfigNodeToken: process.env.FEISHU_SITE_CONFIG_TOKEN!,
+});
+
+if (!result.valid) {
+  console.error(result.configValidation.errors, result.articleIssues);
+}
+
+console.log(result.home, result.navigation.length, result.articles.length);
+```
+
 ## 环境变量建议
 
 ```bash
@@ -99,8 +122,28 @@ FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
   - 从 text run / mention / reminder 提取纯文本
 - `parseArticleContent(pageContent)`
   - 解析 `summary` 和 `tags`
+- `parseSiteConfig(pageContent)` / `parseSiteConfigFromLines(lines)`
+  - 解析站点配置文档，输出 `config + missingKeys + raw`
+- `parseArticleFrontmatter(content)`
+  - 解析文章元信息（frontmatter），输出 `frontmatter + missingKeys + body + raw`
+- `validateSiteConfig(result)`
+  - 校验站点配置（必填字段、URL、长度等），输出 `ValidationResult`
+- `validateArticleFrontmatter(result)`
+  - 校验文章元信息（必填、slug/date/cover/tags/body）
+- `validateArticleFrontmatters(results)`
+  - 批量校验 slug 冲突，输出 `ValidationIssue[]`
 - `getContentArticlesByParent(client, spaceId, parentNodeToken)`
   - 一次性拉取指定父节点下内容并输出 `ContentArticle[]`
+
+### Site Builder
+
+- `buildSiteData(client, { spaceId, siteConfigNodeToken })`
+  - 从站点配置文档启动，生成：
+    - `config/configValidation`
+    - `home`
+    - `navigation`
+    - `articles`
+    - `articleIssues`
 
 ## 输出数据结构（核心）
 
