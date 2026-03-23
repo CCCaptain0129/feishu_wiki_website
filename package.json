@@ -4,6 +4,11 @@
   "private": true,
   "description": "Feishu Wiki/Docx to website content toolkit",
   "type": "module",
+  "scripts": {
+    "content:build": "tsx scripts/build-content.ts",
+    "site:dev": "CONTENT_DIR=../../tmp/local-run-latest npm --prefix apps/site run dev -- --port 3010",
+    "dev": "npm run content:build && npm run site:dev"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "files": [
@@ -15,11 +20,13 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
+    "react-dom": "^18.3.1",
+    "tsx": "^4.20.6"
+  }
+  ,
   "keywords": [
     "feishu",
     "wiki",
@@ -27,11 +34,5 @@
     "cms",
     "nextjs"
   ],
-  "license": "MIT",
-  "devDependencies": {
-    "@types/react": "^18.3.28",
-    "@types/react-dom": "^18.3.7",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  }
+  "license": "MIT"
 }

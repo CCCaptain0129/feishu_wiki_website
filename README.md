@@ -19,6 +19,36 @@
   - `CodeBlock`（复制按钮）
 - 输出可用于前端渲染和索引的统一数据结构
 
+## 3 分钟一键启动
+
+1. 安装依赖
+
+```bash
+npm install
+cd apps/site && npm install && cd ../..
+```
+
+2. 配置环境变量
+
+```bash
+cp .env.example .env
+```
+
+至少填写：
+- `FEISHU_APP_ID`
+- `FEISHU_APP_SECRET`
+- `FEISHU_WIKI_SPACE_ID`
+- `FEISHU_SITE_CONFIG_TOKEN`
+
+3. 一键启动
+
+```bash
+npm run dev
+```
+
+默认会先构建内容（输出到 `tmp/local-run-latest`），再启动站点。  
+访问地址：`http://localhost:3010`
+
 ## 安装与使用
 
 当前仓库为 `private: true`，更适合在 monorepo 或本地项目中直接引用源码。
@@ -111,7 +141,7 @@ console.log(build.valid, files.siteFile, files.routesFile, files.articleDir);
 FEISHU_APP_ID=cli_xxx
 FEISHU_APP_SECRET=xxx
 FEISHU_WIKI_SPACE_ID=xxx
-FEISHU_COMMUNITY_ROOT_TOKEN=xxx
+FEISHU_SITE_CONFIG_TOKEN=xxx
 FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
 ```
 
