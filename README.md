@@ -13,14 +13,27 @@
 
 ## 3 分钟快速开始
 
-### 1) 安装依赖
+### 1) Fork 仓库
+
+```bash
+点击 GitHub 页面右上角 `Fork`，先把仓库复制到你自己的账号下。
+```
+
+### 2) Clone 你的仓库
+
+```bash
+git clone git@github.com:<your-github-id>/feishu_wiki_website.git
+cd feishu_wiki_website
+```
+
+### 3) 安装依赖
 
 ```bash
 npm install
 cd apps/site && npm install && cd ../..
 ```
 
-### 2) 配置环境变量
+### 4) 配置环境变量
 
 ```bash
 cp .env.example .env
@@ -35,7 +48,7 @@ FEISHU_WIKI_SPACE_ID=xxx
 FEISHU_SITE_CONFIG_TOKEN=xxx
 ```
 
-### 3) 一键启动
+### 5) 一键启动
 
 ```bash
 npm run dev
@@ -81,6 +94,50 @@ slug_mode: title-cn
 - `slug_mode` 可选：
   - `title-cn`（默认，支持中文 slug）
   - `ascii`
+
+---
+
+## 部署到 Vercel（公开访问）
+
+如果你希望别人直接访问网站，可以把 `apps/site` 部署到 Vercel。
+
+### 1) 导入仓库
+
+- 在 Vercel 中点击 `Add New Project`
+- 选择本仓库 `feishu_wiki_website`
+
+### 2) 设置项目根目录
+
+- `Root Directory` 选择：`apps/site`
+
+### 3) 配置 Build Command
+
+将 Build Command 改为：
+
+```bash
+npm run build:vercel
+```
+
+这个命令会先执行内容构建（拉飞书），再构建 Next.js 站点。
+
+### 4) 配置环境变量（Vercel Project Settings -> Environment Variables）
+
+必填：
+
+- `FEISHU_APP_ID`
+- `FEISHU_APP_SECRET`
+- `FEISHU_WIKI_SPACE_ID`
+- `FEISHU_SITE_CONFIG_TOKEN`
+
+可选：
+
+- `FEISHU_WIKI_BASE_URL`
+- `CONTENT_OUTPUT_DIR`（默认使用 `./tmp/local-run-latest`）
+- `SLUG_MODE`（`title-cn` 或 `ascii`）
+
+### 5) 点击 Deploy
+
+部署成功后，你会得到一个公开访问地址（`*.vercel.app`）。
 
 ---
 

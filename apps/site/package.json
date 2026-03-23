@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:vercel": "cd ../.. && npm run content:build && cd apps/site && next build",
     "start": "next start",
     "lint": "next lint"
   },
