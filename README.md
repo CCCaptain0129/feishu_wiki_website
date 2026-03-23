@@ -11,7 +11,7 @@
 
 ---
 
-## 3 分钟快速开始
+## 3 分钟快速开始（推荐：直接部署到 Vercel）
 
 ### 1) Fork 仓库
 
@@ -19,27 +19,21 @@
 点击 GitHub 页面右上角 `Fork`，先把仓库复制到你自己的账号下。
 ```
 
-### 2) Clone 你的仓库
+### 2) 在 Vercel 导入你的 Fork
+
+- 打开 Vercel，点击 `Add New Project`
+- 选择你刚刚 Fork 的仓库
+- `Root Directory` 选择：`apps/site`
+
+### 3) 设置 Build Command
 
 ```bash
-git clone git@github.com:<your-github-id>/feishu_wiki_website.git
-cd feishu_wiki_website
+npm run build:vercel
 ```
 
-### 3) 安装依赖
+### 4) 在 Vercel 配置环境变量
 
-```bash
-npm install
-cd apps/site && npm install && cd ../..
-```
-
-### 4) 配置环境变量
-
-```bash
-cp .env.example .env
-```
-
-编辑 `.env`，至少填写这 4 项：
+必填：
 
 ```env
 FEISHU_APP_ID=cli_xxx
@@ -48,13 +42,17 @@ FEISHU_WIKI_SPACE_ID=xxx
 FEISHU_SITE_CONFIG_TOKEN=xxx
 ```
 
-### 5) 一键启动
+可选：
 
 ```bash
-npm run dev
+FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
+CONTENT_OUTPUT_DIR=./tmp/local-run-latest
+SLUG_MODE=title-cn
 ```
 
-打开浏览器访问：`http://localhost:3010`
+### 5) 点击 Deploy
+
+部署成功后，你会得到一个公开访问地址（`*.vercel.app`）。
 
 ---
 
@@ -97,50 +95,6 @@ slug_mode: title-cn
 
 ---
 
-## 部署到 Vercel（公开访问）
-
-如果你希望别人直接访问网站，可以把 `apps/site` 部署到 Vercel。
-
-### 1) 导入仓库
-
-- 在 Vercel 中点击 `Add New Project`
-- 选择本仓库 `feishu_wiki_website`
-
-### 2) 设置项目根目录
-
-- `Root Directory` 选择：`apps/site`
-
-### 3) 配置 Build Command
-
-将 Build Command 改为：
-
-```bash
-npm run build:vercel
-```
-
-这个命令会先执行内容构建（拉飞书），再构建 Next.js 站点。
-
-### 4) 配置环境变量（Vercel Project Settings -> Environment Variables）
-
-必填：
-
-- `FEISHU_APP_ID`
-- `FEISHU_APP_SECRET`
-- `FEISHU_WIKI_SPACE_ID`
-- `FEISHU_SITE_CONFIG_TOKEN`
-
-可选：
-
-- `FEISHU_WIKI_BASE_URL`
-- `CONTENT_OUTPUT_DIR`（默认使用 `./tmp/local-run-latest`）
-- `SLUG_MODE`（`title-cn` 或 `ascii`）
-
-### 5) 点击 Deploy
-
-部署成功后，你会得到一个公开访问地址（`*.vercel.app`）。
-
----
-
 ## 常用命令
 
 ```bash
@@ -155,6 +109,23 @@ npm run dev
 ```
 
 默认内容输出目录：`tmp/local-run-latest`
+
+---
+
+## 本地开发（可选）
+
+如果你想在本地调试，再走这条路径：
+
+```bash
+git clone git@github.com:<your-github-id>/feishu_wiki_website.git
+cd feishu_wiki_website
+npm install
+cd apps/site && npm install && cd ../..
+cp .env.example .env
+npm run dev
+```
+
+本地访问：`http://localhost:3010`
 
 ---
 
