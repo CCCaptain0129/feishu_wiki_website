@@ -45,6 +45,22 @@ npm run dev
 
 ---
 
+## 工作原理
+
+```mermaid
+flowchart LR
+  A["Feishu Wiki / Docx"] --> B["src/client.ts<br/>拉取节点与正文"]
+  B --> C["src/parser.ts<br/>解析摘要、标签、元信息"]
+  C --> D["src/site-builder.ts<br/>生成站点数据"]
+  D --> E["tmp/local-run-latest<br/>site.json / routes.json / articles/*.json"]
+  E --> F["apps/site (Next.js)<br/>渲染首页与文章页"]
+  F --> G["浏览器访问<br/>localhost:3010"]
+```
+
+一句话：先把飞书内容构建成标准 JSON，再由 Next.js 渲染成网站页面。
+
+---
+
 ## 站点配置文档怎么写
 
 `FEISHU_SITE_CONFIG_TOKEN` 对应的是一篇飞书文档，内容示例：
@@ -156,4 +172,3 @@ npm run dev
 ## 环境变量完整示例
 
 见文件：`.env.example`
-
