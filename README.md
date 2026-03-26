@@ -11,29 +11,41 @@
 
 ---
 
-## 3 分钟快速开始（推荐：直接部署到 Vercel）
+## 手把手部署（推荐：Vercel 公开访问）
 
 ### 1) Fork 仓库
 
-```bash
-点击 GitHub 页面右上角 `Fork`，先把仓库复制到你自己的账号下。
+在 GitHub 页面点击右上角 `Fork`，把仓库复制到你自己的账号下。
+
+### 2) 先在飞书创建“站点配置文档”
+
+新建一篇飞书文档（标题可用：`站点配置文档`），粘贴以下模板：
+
+```txt
+site_title: 我的知识网站
+site_description: 用飞书搭建内容网站
+base_url: https://your-project.vercel.app
+theme: default
+home_token: 你的首页token
+nav_root_token: 你的导航根token
+slug_mode: title-cn
 ```
 
-### 2) 在 Vercel 导入你的 Fork
+然后打开这篇配置文档链接，末尾 token 就是 `FEISHU_SITE_CONFIG_TOKEN`。
+
+### 3) 在 Vercel 导入你的 Fork
 
 - 打开 Vercel，点击 `Add New Project`
 - 选择你刚刚 Fork 的仓库
 - `Root Directory` 选择：`apps/site`
 
-### 3) 设置 Build Command
+### 4) 设置 Build Command
 
 ```bash
 npm run build:vercel
 ```
 
-### 4) 在 Vercel 配置环境变量
-
-必填：
+### 5) 在 Vercel 配置环境变量（必须）
 
 ```env
 FEISHU_APP_ID=cli_xxx
@@ -44,15 +56,20 @@ FEISHU_SITE_CONFIG_TOKEN=xxx
 
 可选：
 
-```bash
+```env
 FEISHU_WIKI_BASE_URL=https://your-domain.feishu.cn/wiki
 CONTENT_OUTPUT_DIR=./tmp/local-run-latest
 SLUG_MODE=title-cn
 ```
 
-### 5) 点击 Deploy
+### 6) 点击 Deploy
 
 部署成功后，你会得到一个公开访问地址（`*.vercel.app`）。
+
+### 7) 成功验证（建议）
+
+- 打开首页，能看到文章列表
+- 点击任意文章，能看到正文而不是“页面不存在”
 
 ---
 
@@ -72,9 +89,9 @@ flowchart LR
 
 ---
 
-## 站点配置文档怎么写
+## 站点配置文档（详细说明）
 
-`FEISHU_SITE_CONFIG_TOKEN` 对应的是一篇飞书文档，内容示例：
+`FEISHU_SITE_CONFIG_TOKEN` 对应的是一篇飞书文档。内容示例：
 
 ```txt
 site_title: 我的知识网站
@@ -162,7 +179,11 @@ npm run dev
 
 ### Q1: 报错 `Missing required env`
 
-说明 `.env` 中缺少必要变量。请检查：
+说明环境变量中缺少必要字段。  
+如果你走的是 Vercel 部署，请到 `Project Settings -> Environment Variables` 检查；  
+如果是本地运行，请检查 `.env`。
+
+必填字段：
 
 - `FEISHU_APP_ID`
 - `FEISHU_APP_SECRET`
